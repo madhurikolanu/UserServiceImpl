@@ -2,6 +2,10 @@ package com.apis.security.models;
 
 import com.apis.models.Role;
 import com.apis.models.User;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,8 +13,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@JsonDeserialize
+@NoArgsConstructor
+@Getter
+@Setter
 public class CustomUserDetails implements UserDetails {
-    private String email;
+    private String username;
     private String password;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -19,7 +27,7 @@ public class CustomUserDetails implements UserDetails {
     private List<CustomGrantedAuthority> authorities;
 
     public CustomUserDetails(User user){
-        this.email = user.getEmail();
+        this.username = user.getEmail();
         this.password = user.getHashedPassword();
         this.isEnabled = true;
         this.isAccountNonExpired = true;
@@ -43,7 +51,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
