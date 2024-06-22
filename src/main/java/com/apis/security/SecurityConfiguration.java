@@ -87,25 +87,26 @@ public class SecurityConfiguration{
         return http.build();
     }
 
-    @Bean
+   /* @Bean
     public UserDetailsService userDetailsService() {
-       /* UserDetails userDetails = User.withDefaultPasswordEncoder()
+/* UserDetails userDetails = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("password")
                 .roles("USER")
                 .build();*/
+
         // this will atleast login with error page by providing some hashed password
-        UserDetails userDetails = User.builder()
+      /*  UserDetails userDetails = User.builder()
                 .username("user")
                 .password("$2a$12$EMXOuLDTeOfwJ.6yvFZVbO77qYiiPJaT.XtLLiSoHrjyP6R40iJwe") // hashed password for hello and provide some hashed password because this will use bcryptpasswordencoder
                 .roles("USER")
                 .build();
 
         return new InMemoryUserDetailsManager(userDetails);
-    }
+    }*/
 
     // to register the client
-    @Bean
+/* @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("oidc-client")
@@ -122,7 +123,8 @@ public class SecurityConfiguration{
                 .build();
 
         return new InMemoryRegisteredClientRepository(oidcClient);
-    }
+    }*/
+
 
     // jwt token a component
     @Bean
@@ -160,5 +162,6 @@ public class SecurityConfiguration{
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
+
 
 }
