@@ -28,6 +28,12 @@ public class UserController {
         return userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
     }
 
+    @GetMapping("{id}")
+    public UserDto getUserById(@PathVariable Long id)
+    {
+        return null;
+    }
+
     @PostMapping("/logout")
     public void logout(@RequestBody LogOutRequestDto logOutRequestDto){
         userService.logout(logOutRequestDto.getToken());

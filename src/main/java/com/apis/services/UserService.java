@@ -1,10 +1,13 @@
 package com.apis.services;
 
+import com.apis.dtos.SendEmailRequestDto;
 import com.apis.models.Token;
 import com.apis.models.User;
 import com.apis.repositories.TokenRepository;
 import com.apis.repositories.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,16 @@ import java.util.Optional;
 public class UserService {
     private UserRepository userRepository;
     private TokenRepository tokenRepository;
-
+    private KafkaTemplate<String, String> kafkaTemplate;
+    private ObjectMapper objectMapper;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                TokenRepository tokenRepository){
+                TokenRepository tokenRepository, KafkaTemplate kafkaTemplate, ObjectMapper objectMapper){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenRepository = tokenRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public User save(String name, String email, String password){
@@ -31,6 +37,22 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setHashedPassword(bCryptPasswordEncoder.encode(password));
+
+        SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
+        sendEmailRequestDto.setTo(user.getEmail());
+        sendEmailRequestDto.setFrom("");
+        sendEmailRequestDto.setSubject("Welcome back !!!");
+        sendEmailRequestDto.setBody("Hope you're doing great");
+
+        try{
+            kafkaTemplate.send(
+                    "sendEmail",
+                    objectMapper.writeValueAsString(sendEmailRequestDto)
+            );
+        }
+        catch (Exception e){
+            System.out.println("exception occurred ..." + e);
+        }
         return userRepository.save(user);
     }
 

@@ -11,7 +11,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+       /* http
                 .authorizeHttpRequests((requests) -> {
                             try {
                                 requests
@@ -24,6 +24,7 @@ public class SecurityConfig {
                         }
                 );
 
-        return http.build();
+        return http.build();*/
+        return null;
     }
 }
